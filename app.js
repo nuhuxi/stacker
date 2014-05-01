@@ -4,7 +4,6 @@ $(document).ready( function() {
 		$('.results').html('');
 		// get the value of the tags the user submitted
 		var tags = $(this).find("input[name='tags']").val();
-		alert('We are going to get the top answers on this topic ' + tags);
 		getUnanswered(tags);
 	});
 
@@ -47,15 +46,12 @@ var getUnanswered = function(tags) {
 	});
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 // this function takes the results object from StackOverflow
 // and creates info about search results to be appended to DOM
 var showSearchResults = function(query, resultNum) {
 	var results = '<br/>' + resultNum + ' results for <strong>' + query + '<br/>';
 	return results;
 };
-
 
 // this function takes the question object returned by StackOverflow 
 // and creates new result to be appended to DOM
@@ -80,32 +76,17 @@ var showQuestion = function(question) {
 
 	// set some properties related to asker
 	var asker = result.find('.asker');
-
 	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + 
-				question.owner.user_id + 
-				' >' +
-				question.owner.display_name +
-				'</a>' +
-				'</p>' +
- 				'<p>Reputation: ' +
- 				question.owner.reputation + 
- 				'</p>' +
- 				'<p>Link to this user&#146s Profile:' + 
- 				question.user.link +
- 				'</p>'
-
-
-	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + question.owner.user_id + ' >' +
-													question.owner.display_name +
-												'</a>' +
-							'</p>' +
- 							'<p>Reputation: ' + question.owner.reputation + '</p>'
-
+			question.owner.user_id + 
+			' >' +
+			question.owner.display_name +
+			'</a>' +
+			'</p>' +
+ 			'<p>Reputation: ' + question.owner.reputation + '</p>'
 	);
 
 	return result;
 };
-
 
 // this function takes the results object from StackOverflow
 // and creates info about search results to be appended to DOM
@@ -121,17 +102,16 @@ var showError = function(error){
 	errorElem.append(errorText);
 };
 
+
+
 // takes a string of semi-colon separated tags to be searched
 // for on StackOverflow
 
-
 var getTopAnswerers = function(tags) {
 
-	var getURL = 'http://api.stackexchange.com/2.2/tags/'+ tags + '/top-answerers';
+	var getURL = 'http://api.stackexchange.com/2.2/tags/' + tags + '/top-answerers/month';
 	var request = {tagged: tags,
-		site: 'stackoverflow',
-		order: 'desc',
-		sort: 'creation'};
+		site: 'stackoverflow'};
 	
 	var result = $.ajax({
 		url: getURL,
@@ -140,58 +120,47 @@ var getTopAnswerers = function(tags) {
 		type: "GET",
 		})
 
-	/* this was CPA from the prior section */
+
 	.done(function(result){
 
 		var searchResults = showSearchResults(request.tagged, result.items.length);
-		console.log('result.items.length is : ' + result.items.length);
+
 		$('.search-results').html(searchResults);
 
 		$.each(result.items, function(i, item) {
-			var question = showQuestion(item);
-			$('.results').append(question);
+			var topAnswerer = showTopAnswerer(item);
+			$('.results').append(topAnswerer);
 		});
-
 	});
 
-var showTopAnswerer = function(question) {
+};
+
+var showTopAnswerer = function(answerer) {
 	// clone our result template code
 	var result = $('.templates .answerer').clone();
 	
 	// Set the answerer display name in result
 	var answererDisplayName = result.find('.answerer-displayName');
-
-
+	answererDisplayName.text(answerer.user.display_name);
 
 	// set the reputation in result
 	var reputation = result.find('.answerer-reputation');
-
-
+	reputation.text(answerer.user.reputation);
 
 	// set the post count for question property in result
 	var postCount = result.find('.answerer-postCount');
-
+	postCount.text(answerer.post_count);
 
 	// display a link to the users profile
-
 	var profileLink = result.find('.answerer-profile');
-	profileLink.html('<a href="' + question.user.link + '" target="_blank"></a>');
-	console.log (question.user.link);
-
-	
+	profileLink.html('<a> href="' + answerer.user.link + '"<a/>');
 
 	return result;
 };
 
-// takes error string and turns it into displayable DOM element
-var showError = function(error){
-	var errorElem = $('.templates .error').clone();
-	var errorText = '<p>' + error + '</p>';
-	errorElem.append(errorText);
-};
 
 
-};
+
 
 
 
