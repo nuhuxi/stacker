@@ -4,7 +4,6 @@ $(document).ready( function() {
 		$('.results').html('');
 		// get the value of the tags the user submitted
 		var tags = $(this).find("input[name='tags']").val();
-		alert('We are going to get the top answers on this topic ' + tags);
 		getUnanswered(tags);
 	});
 
@@ -32,12 +31,11 @@ var getUnanswered = function(tags) {
 		type: "GET",
 		})
 	.done(function(result){
-		var searchResults = showSearchResults(request.tagged, result.items.length);
-		console.log('result.items.length is : ' + result.items.length);
-		$('.search-results').html(searchResults);
 
+		var searchResults = showSearchResults(request.tagged, result.items.length);
+		$('.search-results').html(searchResults);
 		$.each(result.items, function(i, item) {
-			var question = showQuestion(item);
+			var question = showUnansweredQuestion(item);
 			$('.results').append(question);
 		});
 	})
@@ -47,9 +45,16 @@ var getUnanswered = function(tags) {
 	});
 };
 
+// this function takes the results object from StackOverflow
+// and creates info about search results to be appended to DOM
+var showSearchResults = function(query, resultNum) {
+	var results = resultNum + ' results for <strong>' + query;
+	return results;
+};
+
 // this function takes the question object returned by StackOverflow 
 // and creates new result to be appended to DOM
-var showQuestion = function(question) {
+var showUnansweredQuestion = function(question) {
 	
 	// clone our result template code
 	var result = $('.templates .question').clone();
@@ -70,22 +75,75 @@ var showQuestion = function(question) {
 
 	// set some properties related to asker
 	var asker = result.find('.asker');
-	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + question.owner.user_id + ' >' +
-													question.owner.display_name +
-												'</a>' +
-							'</p>' +
- 							'<p>Reputation: ' + question.owner.reputation + '</p>'
+	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + 
+				question.owner.user_id + 
+				' >' +
+				question.owner.display_name +
+				'</a>' +
+				'</p>' +
+ 				'<p>Reputation: ' +
+ 				question.owner.reputation + 
+ 				'</p>'
 	);
 
 	return result;
 };
 
 
-// this function takes the results object from StackOverflow
-// and creates info about search results to be appended to DOM
-var showSearchResults = function(query, resultNum) {
-	var results = resultNum + ' results for <strong>' + query;
-	return results;
+var getTopAnswerers = function(tags) {
+
+	var getURL = 'http://api.stackexchange.com/2.2/tags/' + tags +'/top-answerers/month';
+
+
+	var request = {
+		site: 'stackoverflow',
+
+	};
+	
+	var result = $.ajax({
+		url: getURL,
+		data: request,
+		dataType: "jsonp",
+		type: "GET",
+		})
+
+
+	.done(function(result){
+		var searchResults = showSearchResults(tags, result.items.length);
+		$('.search-results').html(searchResults);
+		$.each(result.items, function(i, item) {
+			var question = showTopAnswerer(item);
+			$('.results').append(question);
+		});
+	});
+
+var showTopAnswerer = function(question) {
+	// clone our result template code
+	var result = $('.templates .answerer').clone();
+	
+	// Set the answerer display name in result
+	var answererDisplayName = result.find('.answerer-displayName');
+
+	answererDisplayName.text(question.user.display_name);
+
+	// set the reputation in result
+	var reputation = result.find('.answerer-reputation');
+
+	reputation.text(question.user.reputation);
+
+	// set the post count for question property in result
+	var postCount = result.find('.answerer-postCount');
+		postCount.text(question.post_count);
+
+	// display a link to the users profile
+	console.log(question.user.link);
+	var profileLink = result.find('.answerer-profile a');
+	console.log(profileLink);
+	profileLink.attr('href', question.user.link);
+
+	
+
+	return result;
 };
 
 // takes error string and turns it into displayable DOM element
@@ -95,37 +153,6 @@ var showError = function(error){
 	errorElem.append(errorText);
 };
 
-// takes a string of semi-colon separated tags to be searched
-// for on StackOverflow
-
-
-var getTopAnswerers = function(tags) {
-
-	var getURL = 'http://api.stackexchange.com/2.2/tags/'+ tags + '/top-answerers';
-	var request = {tagged: tags,
-		site: 'stackoverflow',
-		order: 'desc',
-		sort: 'creation'};
-	
-	var result = $.ajax({
-		url: getURL,
-		data: request,
-		dataType: "jsonp",
-		type: "GET",
-		})
-
-	/* this was CPA from the prior section */
-	.done(function(result){
-
-		var searchResults = showSearchResults(request.tagged, result.items.length);
-		console.log('result.items.length is : ' + result.items.length);
-		$('.search-results').html(searchResults);
-
-		$.each(result.items, function(i, item) {
-			var question = showQuestion(item);
-			$('.results').append(question);
-		});
-	}) 
 
 };
 
