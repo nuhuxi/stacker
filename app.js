@@ -48,7 +48,7 @@ var getUnanswered = function(tags) {
 // this function takes the results object from StackOverflow
 // and creates info about search results to be appended to DOM
 var showSearchResults = function(query, resultNum) {
-	var results = resultNum + ' results for <strong>' + query;
+	var results = '<br/>' + resultNum + ' results for <strong>' + query + '<br/>';
 	return results;
 };
 
@@ -128,21 +128,20 @@ var showTopAnswerer = function(question) {
 	// Set the answerer display name in result
 	var answererDisplayName = result.find('.answerer-displayName');
 
-	answererDisplayName.text(question.user.display_name);
+
 
 	// set the reputation in result
 	var reputation = result.find('.answerer-reputation');
 
-	reputation.text(question.user.reputation);
+
 
 	// set the post count for question property in result
 	var postCount = result.find('.answerer-postCount');
-		postCount.text(question.post_count);
+
 
 	// display a link to the users profile
 
 	var profileLink = result.find('.answerer-profile');
-
 	profileLink.html('<a href="' + question.user.link + '" target="_blank"></a>');
 	console.log (question.user.link);
 
