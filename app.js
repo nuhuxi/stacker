@@ -4,6 +4,7 @@ $(document).ready( function() {
 		$('.results').html('');
 		// get the value of the tags the user submitted
 		var tags = $(this).find("input[name='tags']").val();
+		alert('We are going to get the top answers on this topic ' + tags);
 		getUnanswered(tags);
 	});
 
@@ -31,11 +32,12 @@ var getUnanswered = function(tags) {
 		type: "GET",
 		})
 	.done(function(result){
-
 		var searchResults = showSearchResults(request.tagged, result.items.length);
+		console.log('result.items.length is : ' + result.items.length);
 		$('.search-results').html(searchResults);
+
 		$.each(result.items, function(i, item) {
-			var question = showUnansweredQuestion(item);
+			var question = showQuestion(item);
 			$('.results').append(question);
 		});
 	})
@@ -45,6 +47,7 @@ var getUnanswered = function(tags) {
 	});
 };
 
+<<<<<<< HEAD
 // this function takes the results object from StackOverflow
 // and creates info about search results to be appended to DOM
 var showSearchResults = function(query, resultNum) {
@@ -52,9 +55,11 @@ var showSearchResults = function(query, resultNum) {
 	return results;
 };
 
+=======
+>>>>>>> parent of 4f7483a... 140430 1800
 // this function takes the question object returned by StackOverflow 
 // and creates new result to be appended to DOM
-var showUnansweredQuestion = function(question) {
+var showQuestion = function(question) {
 	
 	// clone our result template code
 	var result = $('.templates .question').clone();
@@ -75,6 +80,7 @@ var showUnansweredQuestion = function(question) {
 
 	// set some properties related to asker
 	var asker = result.find('.asker');
+<<<<<<< HEAD
 	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + 
 				question.owner.user_id + 
 				' >' +
@@ -88,21 +94,44 @@ var showUnansweredQuestion = function(question) {
  				question.user.link +
  				'</p>'
 
+=======
+	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + question.owner.user_id + ' >' +
+													question.owner.display_name +
+												'</a>' +
+							'</p>' +
+ 							'<p>Reputation: ' + question.owner.reputation + '</p>'
+>>>>>>> parent of 4f7483a... 140430 1800
 	);
 
 	return result;
 };
 
 
+// this function takes the results object from StackOverflow
+// and creates info about search results to be appended to DOM
+var showSearchResults = function(query, resultNum) {
+	var results = resultNum + ' results for <strong>' + query;
+	return results;
+};
+
+// takes error string and turns it into displayable DOM element
+var showError = function(error){
+	var errorElem = $('.templates .error').clone();
+	var errorText = '<p>' + error + '</p>';
+	errorElem.append(errorText);
+};
+
+// takes a string of semi-colon separated tags to be searched
+// for on StackOverflow
+
+
 var getTopAnswerers = function(tags) {
 
-	var getURL = 'http://api.stackexchange.com/2.2/tags/' + tags +'/top-answerers/month';
-
-
-	var request = {
+	var getURL = 'http://api.stackexchange.com/2.2/tags/'+ tags + '/top-answerers';
+	var request = {tagged: tags,
 		site: 'stackoverflow',
-
-	};
+		order: 'desc',
+		sort: 'creation'};
 	
 	var result = $.ajax({
 		url: getURL,
@@ -111,14 +140,18 @@ var getTopAnswerers = function(tags) {
 		type: "GET",
 		})
 
-
+	/* this was CPA from the prior section */
 	.done(function(result){
-		var searchResults = showSearchResults(tags, result.items.length);
+
+		var searchResults = showSearchResults(request.tagged, result.items.length);
+		console.log('result.items.length is : ' + result.items.length);
 		$('.search-results').html(searchResults);
+
 		$.each(result.items, function(i, item) {
-			var question = showTopAnswerer(item);
+			var question = showQuestion(item);
 			$('.results').append(question);
 		});
+<<<<<<< HEAD
 	});
 
 var showTopAnswerer = function(question) {
@@ -157,6 +190,9 @@ var showError = function(error){
 	errorElem.append(errorText);
 };
 
+=======
+	}) 
+>>>>>>> parent of 4f7483a... 140430 1800
 
 };
 
