@@ -48,6 +48,7 @@ var getUnanswered = function(tags) {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // this function takes the results object from StackOverflow
 // and creates info about search results to be appended to DOM
 var showSearchResults = function(query, resultNum) {
@@ -55,8 +56,7 @@ var showSearchResults = function(query, resultNum) {
 	return results;
 };
 
-=======
->>>>>>> parent of 4f7483a... 140430 1800
+
 // this function takes the question object returned by StackOverflow 
 // and creates new result to be appended to DOM
 var showQuestion = function(question) {
@@ -80,7 +80,7 @@ var showQuestion = function(question) {
 
 	// set some properties related to asker
 	var asker = result.find('.asker');
-<<<<<<< HEAD
+
 	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + 
 				question.owner.user_id + 
 				' >' +
@@ -94,13 +94,13 @@ var showQuestion = function(question) {
  				question.user.link +
  				'</p>'
 
-=======
+
 	asker.html('<p>Name: <a target="_blank" href=http://stackoverflow.com/users/' + question.owner.user_id + ' >' +
 													question.owner.display_name +
 												'</a>' +
 							'</p>' +
  							'<p>Reputation: ' + question.owner.reputation + '</p>'
->>>>>>> parent of 4f7483a... 140430 1800
+
 	);
 
 	return result;
@@ -151,7 +151,7 @@ var getTopAnswerers = function(tags) {
 			var question = showQuestion(item);
 			$('.results').append(question);
 		});
-<<<<<<< HEAD
+
 	});
 
 var showTopAnswerer = function(question) {
@@ -190,9 +190,6 @@ var showError = function(error){
 	errorElem.append(errorText);
 };
 
-=======
-	}) 
->>>>>>> parent of 4f7483a... 140430 1800
 
 };
 
