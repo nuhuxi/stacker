@@ -83,7 +83,11 @@ var showUnansweredQuestion = function(question) {
 				'</p>' +
  				'<p>Reputation: ' +
  				question.owner.reputation + 
+ 				'</p>' +
+ 				'<p>Link to this user&#146s Profile:' + 
+ 				question.user.link +
  				'</p>'
+
 	);
 
 	return result;
@@ -136,10 +140,11 @@ var showTopAnswerer = function(question) {
 		postCount.text(question.post_count);
 
 	// display a link to the users profile
-	console.log(question.user.link);
-	var profileLink = result.find('.answerer-profile a');
-	console.log(profileLink);
-	profileLink.attr('href', question.user.link);
+
+	var profileLink = result.find('.answerer-profile');
+
+	profileLink.html('<a href="' + question.user.link + '" target="_blank"></a>');
+	console.log (question.user.link);
 
 	
 
