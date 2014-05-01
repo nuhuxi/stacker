@@ -153,7 +153,7 @@ var showTopAnswerer = function(answerer) {
 
 	// display a link to the users profile
 	var profileLink = result.find('.answerer-profile');
-	profileLink.html('<a> href="' + answerer.user.link + '"<a/>');
+	profileLink.html('<a href="' + answerer.user.link + '" target=_blank>Click here to see ' + answerer.user.display_name + '&#146s profile. <a/>');
 
 	return result;
 };
